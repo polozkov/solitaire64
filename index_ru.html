@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0">
+
+    <title>Шашечный пасьянс</title>
+
+    <style type="text/css">
+        html,
+        body {
+            font-family: monospace;
+            height: 100%;
+            width: 100%;
+            border: 0;
+            padding: 0;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        p {
+            padding-left: 1%;
+            text-indent: 3%;
+        }
+
+        .classTextPuzzleName {
+            text-align: center;
+            background-color: #90ee90;
+        }
+
+        #idDivForRules {
+            background-color: #FDC;
+            padding-bottom: 1vh;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="classTextPuzzleName" id="idDivTextPuzzleName"><b>Пасьянс</b> "оставь одну шашку".</div>
+
+    <svg id="idShowMainGame"></svg>
+
+    <div id="idDivForRules">
+        <div class="classTextPuzzleName">Правила игры:</div>
+        <p>Цель - съесть как можно больше шашек и, в идеале, остаться с одной шашкой. Есть можно вверх-вниз и вправо-влево на любом расстоянии, если между "едоком" и "едой" нет других шашек. Ячейка сразу же за "едой" (по направлению хода) должна быть свободна. "Едоку" надо приземляться рядом с "едой", не пролетая дальше.</p>
+        <p>Нажимайте на шашку, которой хотите сделать ход; и на ячейку, куда хотите сделать ход. Шашки, имеющие ход, и доступные для них поля отмечены цветом. Основой для пасьянса стал <a href="https://ru.wikipedia.org/wiki/%D0%A1%D0%BE%D0%BB%D0%B8%D1%82%D0%B5%D1%80_(%D0%B8%D0%B3%D1%80%D0%B0)">Солитер (игра), см. Википедию.</a> Шашечный пасьянс отличается от Солитера формой доски, начальной расстановкой, которая может быть случайной; и ещё тем, что шашки дальнобойные. Можете посмотреть <a href="https://www.youtube.com/watch?v=-U7c_y5ks30">видео прохождения классического Солитера.</a> Внимание! Видео с музыкой.</p>
+    </div>
+
+    <script src="js_01_SETS.js"></script>
+    <script src="js_02_generate_convert.js"></script>
+    <script src="js_03_F_XY.js"></script>
+    <script src="js_04_F_MOVE.js"></script>
+    <script src="js_05_F_BOARD.js"></script>
+    <script src="js_06_EL.js"></script>
+    <script src="js_07_SVG.js"></script>
+    <script src="js_08_SVG_DRAW.js"></script>
+    <script src="js_09_process.js"></script>
+</body>
+
+</html>
