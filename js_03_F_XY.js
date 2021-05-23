@@ -4,6 +4,8 @@ G.F_XY = function (arr_01_with_both_coordinates) {
     this.y = arr_01_with_both_coordinates[1];
 };
 
+G.F_XY.f00 = function () { return new G.F_XY([0, 0]); };
+
 G.F_XY.prototype = {
     //return both coordinates [x,y] as array[0..1]
     f_get_arr: function () { return [this.x, this.y]; },
@@ -44,7 +46,7 @@ G.F_XY.prototype = {
     //operation "*n": multiplication of both coordinates on the same nubmer
     f_scale: function (n) { return new G.F_XY([this.x * n, this.y * n]); },
 
-    f_half: function () {return new G.F_XY([this.x / 2, this.y / 2]); },
+    f_half: function () { return new G.F_XY([this.x * 0.5, this.y * 0.5]); },
 
     //is cell p on this game board?
     f_is_on_this_board: function (obj_p) {

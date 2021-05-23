@@ -29,7 +29,7 @@ G.SETS = {
 
     //styles for each type of cell
     CELL: {
-        empty: G.f_style("#FD6", "#000", 1),
+        empty: G.f_style("#FE9", "#000", 1),
         hint: G.f_style("#8F5", "#000", 1),
         selected: G.f_style("#0A0", "#000", 1)
     },

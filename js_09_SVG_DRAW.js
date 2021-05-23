@@ -4,16 +4,15 @@ G.SVG.DRAW = {
         var RECT_id = 'ID="' + G.CONVERT.f_xy_to_cell_id(xy) + '"';
 
         //top left corner of the cell
-        var p = G.SVG.f_cell_corner(xy).f_get_xy_string();
+        var p = G.SVG.f_cell_ab(xy).a.f_get_xy_string();
         var RECT_xy = 'x="' + p.x + '" y="' + p.y + '"';
-        var RECT_wh = 'width="' + G.SVG.wh_cell_string.x + '" height="' + G.SVG.wh_cell_string.y + '"';
-        var RECT_r = 'rx="' + G.SVG.wh_corners_string.x + '" ry="' + G.SVG.wh_corners_string.y + '"';
+        var RECT_wh = 'width="' + G.SVG.CELL_00.wh_string.x + '" height="' + G.SVG.CELL_00.wh_string.y + '"';
+        var RECT_r = 'rx="' + G.SVG.CELL_00.corners_string_xy.x + '" ry="' + G.SVG.CELL_00.corners_string_xy.y + '"';
 
         var RECT = RECT_id + ' ' + RECT_xy + ' ' + RECT_r + ' ' + RECT_wh;
 
         //if obj_style defined, add style
         RECT += ((optional_obj_style) ? (' ' + G.SVG.f_style_to_string(optional_obj_style)) : '');
-
         return '<rect ' + RECT + '/>';
     },
 
@@ -25,7 +24,7 @@ G.SVG.DRAW = {
         if (optional_obj_dx_dy) { c.f_self_add(optional_obj_dx_dy); };
         c = c.f_get_xy_string();
         var CIRCLE_cx_cy = 'cx="' + c.x + '" cy="' + c.y + '"';
-        var CIRCLE_r = 'rx="' + G.SVG.wh_ellipse_rx_ry.x + '"' + ' ry="' + G.SVG.wh_ellipse_rx_ry.y + '"';
+        var CIRCLE_r = 'rx="' + G.SVG.CELL_00.wh_ellipse_rx_ry.x + '"' + ' ry="' + G.SVG.CELL_00.wh_ellipse_rx_ry.y + '"';
 
         var CIRCLE = CIRCLE_id + ' ' + CIRCLE_cx_cy + ' ' + CIRCLE_r;
 
@@ -73,9 +72,9 @@ G.SVG.DRAW = {
         //for animation, show active circle in process
         function f_circle_dxy(i_xy) {
             //when move is not in the process, delta is zero-zero
-            if ((!move_now.a) || (!move_now.b)) { return new G.F_XY([0, 0]); };
+            if ((!move_now.a) || (!move_now.b)) { return G.F_XY.f00(); };
             //when it is not active circle, delta is zero-zero
-            if (!move_now.b.f_is_equal_to(i_xy)) { return new G.F_XY([0, 0]); };
+            if (!move_now.b.f_is_equal_to(i_xy)) { return G.F_XY.f00(); };
 
             //delta between 2 cells = a - b (because we show circle move_now.b)
             var delta_nxy = move_now.a.f_subtract(move_now.b);
@@ -86,14 +85,14 @@ G.SVG.DRAW = {
         var final_SVG = "";
         var i = {}, i_style;
 
-        for (i = new G.F_XY([0, 0]); i.x < obj_board.sizes.x; i.x++) {
+        for (i = G.F_XY.f00(); i.x < obj_board.sizes.x; i.x++) {
             for (i.y = 0; i.y < obj_board.sizes.y; i.y++) {
                 i_style = arr_cell_styles[f_cell_style(i)];
                 final_SVG += G.SVG.DRAW.f_cell(i, i_style);
             }
         }
 
-        for (i = new G.F_XY([0, 0]); i.x < obj_board.sizes.x; i.x++) {
+        for (i = G.F_XY.f00(); i.x < obj_board.sizes.x; i.x++) {
             for (i.y = 0; i.y < obj_board.sizes.y; i.y++) {
                 i_style = arr_circle_styles[f_circle_style(i)];
                 final_SVG += G.SVG.DRAW.f_circle(i, i_style, f_circle_dxy(i));

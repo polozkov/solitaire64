@@ -18,7 +18,6 @@ G.PROCESS = {
         G.PROCESS.arr_solution = G.PROCESS.main_board.f_put_with_back_solution(G.SETS.GAME_BOARD.n_pieces);
 
         G.SVG.f_maximize_game_area();
-        G.SVG.f_maximize_game_area();
         G.SVG.MAIN.innerHTML = G.SVG.DRAW.f_board(G.PROCESS.main_board, G.PROCESS.move_now, 0);
     },
 
@@ -75,7 +74,6 @@ G.EVENT = {
     },
 
     f_resize_window: function () {
-        G.SVG.f_maximize_game_area();
         G.SVG.f_maximize_game_area();
         G.SVG.MAIN.innerHTML = G.SVG.DRAW.f_board(G.PROCESS.main_board, G.PROCESS.move_now, 0);
     }

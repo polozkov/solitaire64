@@ -121,7 +121,7 @@ G.F_BOARD.prototype.f_put_with_back_solution = function (n_circles) {
         };
 
         //for each cell
-        for (var i_xy = new G.F_XY([0, 0]); i_xy.x < obj_sizes.x; i_xy.x++) {
+        for (var i_xy = G.F_XY.f00(); i_xy.x < obj_sizes.x; i_xy.x++) {
             for (i_xy.y = 0; i_xy.y < obj_sizes.y; i_xy.y++) {
                 //check, that it is occupied
                 if (f_value(i_xy) === 1) {

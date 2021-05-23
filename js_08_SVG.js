@@ -1,45 +1,88 @@
 G.SVG = {
     //main SVG-element: game_board
     MAIN: document.getElementById("idShowMainGame"),
-    
-    //width and heigth of the SVG element
-    wh_total_svg: new G.F_XY([0, 0]),
-    wh_area_board: new G.F_XY([0, 0]),
-    //wh_buttons: new G.F_XY([0, 0]),
-    //wh_area_buttons: new G.F_XY([0, 0]),
 
-    //sizes of the one cell (on the board grid)
-    wh_cell: new G.F_XY([0, 0]),
+    //areas are rectangles by two points (a,b)
+    AREAS: {
+        //total SVG area from (0,0) to (w,h)
+        total_svg: new G.F_AB(G.F_XY.f00(), G.F_XY.f00()),
+        //board with border (with line_width)
+        board_all: new G.F_AB(G.F_XY.f00(), G.F_XY.f00()),
+        //board area without lines  (to draw grid with stroke-width)
+        board_cut: new G.F_AB(G.F_XY.f00(), G.F_XY.f00()),
+        //area for game buttons
+        buttons: new G.F_AB(G.F_XY.f00(), G.F_XY.f00()),
 
-    //sizes of cell rounded to the 2 decimal digits ond transform to the (string_x,string_y)
-    wh_cell_string: new G.F_XY([0, 0]),
-    //rounded_rect corners as (string_x,string_y)
-    wh_corners_string: new G.F_XY([0, 0]),
+        f_set_areas() {
+            //free visible client size of body
+            var body_xy = G.EL.f_body_wh();
+            //info string of my game
+            var info_h = G.EL.DIV_INFO.offsetHeight;
+            //empty body area for SVG
+            var total_svg_wh = new G.F_XY([body_xy.x, body_xy.y - info_h]);
 
-    //object: coordinates of the left-top corner of the zero-zero cell
-    wh_cut_board: new G.F_XY([0, 0]),
-    //linewidth of the cell on the game_board
-    width_of_cell_border: 1,
+            //board sizes by cell and line_width
+            var x_size = G.SETS.GAME_BOARD.sizes[0] + G.SETS.ratio_cell_border_to_cell;
+            var y_size = G.SETS.GAME_BOARD.sizes[1] + G.SETS.ratio_cell_border_to_cell;
+            var xy_sizes = new G.F_XY([x_size, y_size]);
 
-    //sizes of ellipses
-    wh_ellipse_rx_ry: new G.F_XY([0, 0]),
+            //board Width and Height with border for line_width
+            var board_wh_all = total_svg_wh.f_maximize_to_ratio(x_size / y_size);
+            //board grid sizes (without line_width) = WH_ALL / SIZES_WITH_LINE_WIDTH * SIZES_NX_NY_CELLS
+            var board_wh_cut = board_wh_all.f_div(xy_sizes).f_mult(new G.F_XY(G.SETS.GAME_BOARD.sizes));
+            //how many cut from each side = 0.5 delta sizes or 0.5 line_width
+            var cut_wh = board_wh_all.f_subtract(board_wh_cut).f_half();
 
-    f_split: function (x_to_y) {
-        var board = G.SVG.wh_total_svg.f_maximize_to_ratio(x_to_y);
-        //if (board.x_was_big) {console.log(board.x, board.y); }
-        G.SVG.wh_area_board = board.f_get_xy_copy();
+            //tatal SVG from (0,0) to total sizes
+            G.SVG.AREAS.total_svg = new G.F_AB(G.F_XY.f00(), total_svg_wh);
+            //board is in left top corner
+            G.SVG.AREAS.board_all = G.F_AB.f_by_a_and_wh(G.SVG.AREAS.total_svg.a, board_wh_all);
+            //cut is board_all - cut for_each side
+            G.SVG.AREAS.board_cut = G.SVG.AREAS.board_all.f_cut_wh(cut_wh);
+        }
     },
 
     //return coordinates of the left_top corner of the cell_xy by gotten object xy
-    f_cell_corner: function (xy) { return G.SVG.wh_cut_board.f_add(xy.f_mult(G.SVG.wh_cell)); },
+    f_cell_ab: function (xy) { return G.SVG.AREAS.board_cut.f_get_cell_area(xy, G.SETS.GAME_BOARD.sizes); },
 
     //return coordinates of the center of the cell_xy by gotten object xy
-    f_cell_center: function (xy) { return G.SVG.wh_cell.f_half().f_add(G.SVG.f_cell_corner(xy)); },
+    f_cell_center: function (xy) { return G.SVG.f_cell_ab(xy).f_get_center(); },
+
+    //sets for cell_00, that will be used for drawing
+    CELL_00: {
+        //grid_sizes of any cell
+        wh_sizes: G.F_XY.f00(),
+        //grid_sizes of any cell as string (only 2 decimal digits)
+        wh_string: G.F_XY.f00(),
+
+        //round corners for_each round rect cell
+        corners_string_xy: G.F_XY.f00(),
+        //line-width for cell
+        width_of_border: 1,
+        //radiuses of ellipse of peg
+        wh_ellipse_rx_ry: G.F_XY.f00(),
+
+        f_set_cell_00() {
+            //sizes of cell in grid
+            var wh = G.SVG.f_cell_ab(G.F_XY.f00()).f_get_wh();
+            G.SVG.CELL_00.wh_sizes = wh.f_get_xy_copy();
+            G.SVG.CELL_00.wh_string = wh.f_get_xy_string();
+
+            //rounrect's corners is wh, scaled by G.SETS and converted to string
+            G.SVG.CELL_00.corners_string_xy = wh.f_scale(G.SETS.ratio_round_corners).f_get_xy_string();
+            //border is wh.min, scaled by G.SETS
+            G.SVG.CELL_00.width_of_border = wh.f_get_min() * G.SETS.ratio_cell_border_to_cell;
+            //ellipses is G.SETS.ratio_radius_to_cell of wh and converted to string
+            G.SVG.CELL_00.wh_ellipse_rx_ry = wh.f_scale(G.SETS.ratio_radius_to_cell).f_get_xy_string();
+        }
+    },
+
+
 
     //which cell is belong to pressed pixel
     f_cell_by_pxy: function (pxy) {
         //cell (x,y) with fractional part, that must be: f_get_int() by Math.floor()
-        var n_xy = pxy.f_subtract(G.SVG.wh_cut_board).f_div(G.SVG.wh_cell).f_get_int();
+        var n_xy = pxy.f_subtract(G.SVG.AREAS.board_cut.a).f_div(G.SVG.CELL_00.wh_sizes).f_get_int();
         return ((new G.F_XY(G.SETS.GAME_BOARD.sizes)).f_is_on_this_board(n_xy) ? n_xy : null);
     },
 
@@ -49,35 +92,17 @@ G.SVG = {
         var stroke = 'stroke:' + obj_style.stroke + ';';
 
         //.stroke_width is the ratio to the width_of_cell_border
-        var w = obj_style.stroke_width * G.SVG.width_of_cell_border;
+        var w = obj_style.stroke_width * G.SVG.CELL_00.width_of_border;
         var width = 'stroke-width:' + G.CONVERT.f_n_to_string(w) + ';';
         return 'style="' + fill + ' ' + stroke + ' ' + width + '"';
     },
 
     f_maximize_game_area: function () {
-        var body_xy = G.EL.f_body_wh();
-        var info_h = G.EL.DIV_INFO.offsetHeight;
-
-        var x_size = G.SETS.GAME_BOARD.sizes[0] + G.SETS.ratio_cell_border_to_cell;
-        var y_size = G.SETS.GAME_BOARD.sizes[1] + G.SETS.ratio_cell_border_to_cell;
-        var xy_sizes = new G.F_XY([x_size, y_size]);
-
-        G.SVG.wh_total_svg = new G.F_XY([body_xy.x, body_xy.y - info_h]);
-        G.SVG.f_split(x_size / y_size);
-
-        //all cells has the same size on the grid of the game_board
-        G.SVG.wh_cell = G.SVG.wh_area_board.f_div(xy_sizes);
-        //string with 2 decimal signs
-        G.SVG.wh_cell_string = G.SVG.wh_cell.f_get_xy_string();
-        //rx and ry for the round_rect cell
-        G.SVG.wh_corners_string = G.SVG.wh_cell.f_scale(G.SETS.ratio_round_corners).f_get_xy_string();
-
-        //line_width depends from cell_width and ratio (border / cell)
-        G.SVG.width_of_cell_border = G.SVG.wh_cell.f_get_min() * G.SETS.ratio_cell_border_to_cell;
-        G.SVG.wh_ellipse_rx_ry = G.SVG.wh_cell.f_scale(G.SETS.ratio_radius_to_cell).f_get_xy_string();
-        G.SVG.wh_cut_board = G.SVG.wh_cell.f_scale(G.SETS.ratio_cell_border_to_cell / 2);
-
-        //set pixel width and hidth for the main game_board SVG
-        G.SVG.wh_total_svg.f_set_element_style(G.SVG.MAIN);
+        for (var i_repeat_twice = 0; i_repeat_twice < 2; i_repeat_twice++) {
+            G.SVG.AREAS.f_set_areas();
+            G.SVG.CELL_00.f_set_cell_00();
+            //set pixel width and hidth for the main game_board SVG
+            G.SVG.AREAS.total_svg.f_get_wh().f_set_element_style(G.SVG.MAIN);
+        }
     }
 };
