@@ -25,14 +25,14 @@ G.SVG.DRAW = {
         if (optional_obj_dx_dy) { c.f_self_add(optional_obj_dx_dy); };
         c = c.f_get_xy_string();
         var CIRCLE_cx_cy = 'cx="' + c.x + '" cy="' + c.y + '"';
-        var CIRCLE_r = 'r="' + G.SVG.radius_as_string + '"';
+        var CIRCLE_r = 'rx="' + G.SVG.wh_ellipse_rx_ry.x + '"' + ' ry="' + G.SVG.wh_ellipse_rx_ry.y + '"';
 
         var CIRCLE = CIRCLE_id + ' ' + CIRCLE_cx_cy + ' ' + CIRCLE_r;
 
         //if obj_style defined, add style
         CIRCLE += ((optional_obj_style) ? (' ' + G.SVG.f_style_to_string(optional_obj_style)) : '');
 
-        return '<circle ' + CIRCLE + '/>';
+        return '<ellipse ' + CIRCLE + '/>';
     },
 
     f_board: function (obj_board, move_now, time_process_0_1) {

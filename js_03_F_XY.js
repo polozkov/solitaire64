@@ -61,7 +61,9 @@ G.F_XY.prototype = {
         var cut_x = [this.y * x_div_y, this.y];
         var cut_y = [this.x, this.x / x_div_y];
         var is_x_big = (this.x > (x_div_y * this.y));
-        return (new G.F_XY(is_x_big ? cut_x : cut_y));
+        var result_xy = new G.F_XY(is_x_big ? cut_x : cut_y);
+        result_xy.x_was_big = is_x_big;
+        return result_xy;
     },
 
     //set width and height of the gotten HTML-element
