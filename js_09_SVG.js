@@ -107,8 +107,6 @@ G.SVG = {
         }
     },
 
-
-
     //which cell is belong to pressed pixel
     f_cell_by_pxy: function (pxy) {
         //cell (x,y) with fractional part, that must be: f_get_int() by Math.floor()

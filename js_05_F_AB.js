@@ -2,17 +2,17 @@
 G.F_AB = function (gotten_a, gotten_b) {
     this.a = gotten_a.f_get_xy_copy();
     this.b = gotten_b.f_get_xy_copy();
-    //if (gotten_b.x + gotten_b.y) {debugger;}
 };
 
 G.F_AB.f_00_00 = function () {return (new G.F_AB(G.F_XY.f00(), G.F_XY.f00())); };
 
 G.F_AB.f_by_a_and_wh = function (a, wh) { return new G.F_AB(a, a.f_add(wh)); };
 
-G.F_AB.f_by_bbox = function (bbox) {
-    var a = new G.F_XY([bbox.x, bbox.y]);
-    var b = new G.F_XY([bbox.width, bbox.height]);
-    return G.F_AB.f_by_a_and_wh(a, b);
+G.F_AB.f_by_client_rect = function (bbox, svg_left_top) {
+    var a = new G.F_XY([bbox.left, bbox.top]);
+    var b = new G.F_XY([bbox.right, bbox.bottom]);
+    var wh = b.f_subtract(a);
+    return G.F_AB.f_by_a_and_wh(a.f_subtract(svg_left_top), wh);
 };
 
 G.F_AB.prototype = {

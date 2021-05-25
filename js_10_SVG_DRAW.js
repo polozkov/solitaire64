@@ -90,8 +90,8 @@ G.SVG.DRAW = {
         var id_text = G.CONVERT.f_name_to_id(button_name, "TEXT");
         var id_el = document.getElementById(id_text);
 
-        var bbox = id_el.getBBox(true);
-        var ab_text = G.F_AB.f_by_bbox(bbox);
+        var client_rect = id_el.getBoundingClientRect();
+        var ab_text = G.F_AB.f_by_client_rect(client_rect, G.EL.f_client_rect_left_top(G.SVG.MAIN));
         
         var m = ab_rect.f_transform_to_inscribe_in_this(ab_text);
         id_el.setAttribute("transform", m);

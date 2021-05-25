@@ -36,6 +36,12 @@ G.EL = {
         return (new G.F_XY([x,y]));
     },
 
+    f_client_rect_left_top: function (elem) {
+        var client_rect = elem.getBoundingClientRect();
+        var arr_01 = [client_rect.left, client_rect.top];
+        return (new G.F_XY(arr_01));
+    },
+
     //folifill for calculating LEFT-TOP corner's coordinate (x,y) of the element on the VISIBLE window
     f_corner_coordinates_visible: function (elem) {
         //calculate (left, top) corner for outdated browsers
