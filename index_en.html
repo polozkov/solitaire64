@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0">
+    <title>solitaire64</title>
+    <link rel="stylesheet" href="css_main.css" type="text/css">
+</head>
+
+<body>
+    <div class="classTextPuzzleName" id="idDivTextPuzzleName"></div>
+
+    <svg id="idShowMainGame"></svg>
+
+    <div id="idDivForRules">
+        <div class="classTextPuzzleName">Rules:</div>
+
+        <p>It is the game, based on Peg solitaire. But pegs can jump on any distance, not only anjacted cells. But after jumping peg must stop on the adjacted cell (after captured peg). Original game, that inspire me: "Peg_solitaire" <a href="https://en.wikipedia.org/wiki/Peg_solitaire">on_Wikipedia.</a></p>
+        
+        <p>Just click highlighted starting and finishing cells to make a move. Refresh the page to start a new game. If this game is too difficult for You, watch this video: "How To Solve The Peg Solitaire Puzzle" <a href="https://www.youtube.com/watch?v=-U7c_y5ks30">on_YouTube.</a> Attention! Video with music.</p>
+    </div>
+
+    <script src="js_01_SETS.js"></script>
+    <script src="js_02_LANG.js"></script>
+    <script src="js_03_generate_convert.js"></script>
+    <script src="js_04_F_XY.js"></script>
+    <script src="js_05_F_AB.js"></script>
+    <script src="js_06_F_MOVE.js"></script>
+    <script src="js_07_F_BOARD.js"></script>
+    <script src="js_08_EL.js"></script>
+    <script src="js_09_SVG.js"></script>
+    <script src="js_10_SVG_DRAW.js"></script>
+    <script src="js_11_process.js"></script>
+</body>
+
+</html>

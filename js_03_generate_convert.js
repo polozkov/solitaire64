@@ -71,6 +71,11 @@ G.CONVERT = {
     //ID for the circle "n" on the game board
     f_xy_to_circle_id: function (arr_x0_y1) {
         return ("ID_CIRCLE_" + arr_x0_y1[0] + "_" + arr_x0_y1[1]);
+    },
+
+    //button name for text or rect
+    f_name_to_id: function (gotten_button_name, rect_or_text) {
+        return ("ID_" + rect_or_text + "_" + gotten_button_name);
     }
 };
 

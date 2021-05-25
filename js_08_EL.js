@@ -29,20 +29,6 @@ G.EL = {
         var wh = [G.EL.f_min_or_max_in_array(arr_w), G.EL.f_min_or_max_in_array(arr_h)];
         return (new G.F_XY(wh));
     },
-/*
-    //if has no property .PageX, pageY, generate this property
-    f_fix_page_xy: function (e) {
-        if (e.pageX == null && e.clientX != null) { //if has no pageX..
-            var html = document.documentElement;
-            var body = document.body;
-
-            e.pageX = e.clientX + (html.scrollLeft || body && body.scrollLeft || 0);
-            e.pageX -= html.clientLeft || 0;
-
-            e.pageY = e.clientY + (html.scrollTop || body && body.scrollTop || 0);
-            e.pageY -= html.clientTop || 0;
-        }
-    },*/
 
     f_window_scroll: function () {
         var x = document.body.scrollLeft || document.documentElement.scrollLeft || 0;

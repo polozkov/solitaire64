@@ -27,6 +27,7 @@ G.F_XY.prototype = {
 
     //return minimal coordinate of the point
     f_get_min: function () { return Math.min(this.x, this.y); },
+    f_get_max: function () { return Math.max(this.x, this.y); },
 
     //operation "+": sum of 2 points
     f_add: function (p) { return new G.F_XY([this.x + p.x, this.y + p.y]); },
@@ -47,6 +48,17 @@ G.F_XY.prototype = {
     f_scale: function (n) { return new G.F_XY([this.x * n, this.y * n]); },
 
     f_half: function () { return new G.F_XY([this.x * 0.5, this.y * 0.5]); },
+
+    //make ratio max/min not more, than max_ratio (max_ratio >= 1)
+    f_get_press_not_more: function (max_ratio) {
+        var min_n = this.f_get_min();
+        var min_xy = this.f_scale(1 / min_n);
+
+        min_xy.x = Math.min(min_xy.x, max_ratio);
+        min_xy.y = Math.min(min_xy.y, max_ratio);
+
+        return min_xy.f_scale(min_n);
+    },
 
     //is cell p on this game board?
     f_is_on_this_board: function (obj_p) {

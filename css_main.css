@@ -8,7 +8,7 @@ html, body {
     overflow-x: hidden;
 }
 
-html, body {
+.classTextPuzzleName, #idDivForRules {
     font-size: 5vh;
     font-size: 5vm;
     font-size: 5vmin;

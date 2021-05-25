@@ -152,3 +152,17 @@ G.F_BOARD.prototype.f_put_with_back_solution = function (n_circles) {
 
     return solution_as_arr_of_moves;
 };
+
+//return 0, when game in process and 1 or more, when game is over
+G.F_BOARD.prototype.f_is_game_over = function () {
+    var n = 0;
+    for (var ix = 0; ix < this.sizes.x; ix++) {
+        for (var iy = 0; iy < this.sizes.y; iy++) {
+            //if we have at least one move, game continues
+            if (this.f_moves_from_cell(new G.F_XY([ix, iy])).length > 0) {return 0; }
+            //not zero cell (is occupied)
+            if (this.f_get_untested_xy([ix, iy])) {n++; }
+        }
+    }
+    return n;
+};

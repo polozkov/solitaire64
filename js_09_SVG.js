@@ -5,13 +5,31 @@ G.SVG = {
     //areas are rectangles by two points (a,b)
     AREAS: {
         //total SVG area from (0,0) to (w,h)
-        total_svg: new G.F_AB(G.F_XY.f00(), G.F_XY.f00()),
+        total_svg: G.F_AB.f_00_00(),
         //board with border (with line_width)
-        board_all: new G.F_AB(G.F_XY.f00(), G.F_XY.f00()),
+        board_all: G.F_AB.f_00_00(),
         //board area without lines  (to draw grid with stroke-width)
-        board_cut: new G.F_AB(G.F_XY.f00(), G.F_XY.f00()),
+        board_cut: G.F_AB.f_00_00(),
         //area for game buttons
-        buttons: new G.F_AB(G.F_XY.f00(), G.F_XY.f00()),
+        all_buttons: G.F_AB.f_00_00(),
+
+        BUTTON: {
+            frame: G.F_AB.f_00_00(),
+
+            game_new: G.F_AB.f_00_00(),
+            game_restart: G.F_AB.f_00_00(),
+            move_back: G.F_AB.f_00_00(),
+            move_forward: G.F_AB.f_00_00(),
+
+            f_set_frame: function () {
+                var my_frame = G.SVG.AREAS.BUTTON.frame, i_button, i;
+                for (i_button = 0; i_button < G.LANG.BUTTONS.arr_names.length; i_button++) {
+                    i = G.LANG.BUTTONS.arr_names[i_button];
+                    G.SVG.AREAS.BUTTON[i] = my_frame.f_get_cell_area(new G.F_XY([0, i_button]), [1, 4]);
+                    G.SVG.AREAS.BUTTON[i] = G.SVG.AREAS.BUTTON[i].f_cut_short_side_ratio(G.SETS.button_cut);
+                }
+            }
+        },
 
         f_set_areas() {
             //free visible client size of body
@@ -22,8 +40,8 @@ G.SVG = {
             var total_svg_wh = new G.F_XY([body_xy.x, body_xy.y - info_h]);
 
             //board sizes by cell and line_width
-            var x_size = G.SETS.GAME_BOARD.sizes[0] + G.SETS.ratio_cell_border_to_cell;
-            var y_size = G.SETS.GAME_BOARD.sizes[1] + G.SETS.ratio_cell_border_to_cell;
+            var x_size = G.SETS.GAME_BOARD.sizes[0] + G.SETS.RATIO.cell_border_to_cell;
+            var y_size = G.SETS.GAME_BOARD.sizes[1] + G.SETS.RATIO.cell_border_to_cell;
             var xy_sizes = new G.F_XY([x_size, y_size]);
 
             //board Width and Height with border for line_width
@@ -35,6 +53,18 @@ G.SVG = {
 
             //tatal SVG from (0,0) to total sizes
             G.SVG.AREAS.total_svg = new G.F_AB(G.F_XY.f00(), total_svg_wh);
+
+            if (board_wh_all.x_was_big) {
+                board_wh_all.x = Math.min(board_wh_all.x, total_svg_wh.x * G.SETS.RATIO.press_board_on_x);
+                G.SVG.AREAS.all_buttons = new G.F_AB(new G.F_XY([board_wh_all.x, 0]), G.SVG.AREAS.total_svg.b);
+                G.SVG.AREAS.BUTTON.frame = G.SVG.AREAS.all_buttons.f_get_cell_area(G.F_XY.f00(), [1, 2]);
+            } else {
+                board_wh_all.y = Math.min(board_wh_all.y, total_svg_wh.y * G.SETS.RATIO.press_board_on_y);
+                G.SVG.AREAS.all_buttons = new G.F_AB(new G.F_XY([0, board_wh_all.y]), G.SVG.AREAS.total_svg.b);
+                G.SVG.AREAS.BUTTON.frame = G.SVG.AREAS.all_buttons.f_get_cell_area(G.F_XY.f00(), [2, 1]);
+            }
+            G.SVG.AREAS.BUTTON.f_set_frame();
+
             //board is in left top corner
             G.SVG.AREAS.board_all = G.F_AB.f_by_a_and_wh(G.SVG.AREAS.total_svg.a, board_wh_all);
             //cut is board_all - cut for_each side
@@ -69,11 +99,11 @@ G.SVG = {
             G.SVG.CELL_00.wh_string = wh.f_get_xy_string();
 
             //rounrect's corners is wh, scaled by G.SETS and converted to string
-            G.SVG.CELL_00.corners_string_xy = wh.f_scale(G.SETS.ratio_round_corners).f_get_xy_string();
+            G.SVG.CELL_00.corners_string_xy = wh.f_scale(G.SETS.RATIO.round_corners).f_get_xy_string();
             //border is wh.min, scaled by G.SETS
-            G.SVG.CELL_00.width_of_border = wh.f_get_min() * G.SETS.ratio_cell_border_to_cell;
-            //ellipses is G.SETS.ratio_radius_to_cell of wh and converted to string
-            G.SVG.CELL_00.wh_ellipse_rx_ry = wh.f_scale(G.SETS.ratio_radius_to_cell).f_get_xy_string();
+            G.SVG.CELL_00.width_of_border = wh.f_get_min() * G.SETS.RATIO.cell_border_to_cell;
+            //ellipses is G.SETS.RATIO.radius_to_cell of wh and converted to string
+            G.SVG.CELL_00.wh_ellipse_rx_ry = wh.f_scale(G.SETS.RATIO.radius_to_cell).f_get_xy_string();
         }
     },
 
@@ -83,16 +113,29 @@ G.SVG = {
     f_cell_by_pxy: function (pxy) {
         //cell (x,y) with fractional part, that must be: f_get_int() by Math.floor()
         var n_xy = pxy.f_subtract(G.SVG.AREAS.board_cut.a).f_div(G.SVG.CELL_00.wh_sizes).f_get_int();
+        //if integer n_xy is on board, return cell_xy
         return ((new G.F_XY(G.SETS.GAME_BOARD.sizes)).f_is_on_this_board(n_xy) ? n_xy : null);
     },
 
+    f_button_by_pxy: function (pxy) {
+        var i_button, i_ab;
+        for (i_button = 0; i_button < G.LANG.BUTTONS.arr_names.length; i_button++) {
+            i_ab = G.SVG.AREAS.BUTTON[G.LANG.BUTTONS.arr_names[i_button]];
+            if (i_ab.f_is_on_area(pxy)) {
+                return G.LANG.BUTTONS.arr_names[i_button];
+            }
+        }
+        return null;
+    },
+
     //return style string by object_style
-    f_style_to_string: function (obj_style) {
+    f_style_to_string: function (obj_style, optional_ratio) {
+        if (optional_ratio === undefined) { optional_ratio = G.SVG.CELL_00.width_of_border; };
         var fill = 'fill:' + obj_style.fill + ';';
         var stroke = 'stroke:' + obj_style.stroke + ';';
 
         //.stroke_width is the ratio to the width_of_cell_border
-        var w = obj_style.stroke_width * G.SVG.CELL_00.width_of_border;
+        var w = obj_style.stroke_width * optional_ratio;
         var width = 'stroke-width:' + G.CONVERT.f_n_to_string(w) + ';';
         return 'style="' + fill + ' ' + stroke + ' ' + width + '"';
     },
